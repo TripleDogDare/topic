@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+TOPLEVEL=$(git rev-parse --show-toplevel)
+export GOBIN="${TOPLEVEL}/bin"
+
+go fmt ./...
+go test ./...
+go install ./cmd/...
