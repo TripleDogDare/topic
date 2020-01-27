@@ -98,9 +98,11 @@ func Latest(ctx context.Context, stdin io.Reader, stdout io.Writer, stderr io.Wr
 	flagset := flag.NewFlagSet("prompt", flag.ContinueOnError)
 	flagset.SetOutput(stderr)
 	// set flags
-	timestamp := flagset.Bool("timestamp", false, "print timestamp")
-	duration := flagset.Bool("duration", false, "print duration")
+	printTimestamp := flagset.Bool("timestamp", false, "print timestamp")
+	printDuration := flagset.Bool("duration", false, "print duration")
 	printTopic := flagset.Bool("topic", false, "print topic")
+	truncate := flagset.Duration("truncate", 0, "truncate duration")
+
 	// handle flag errors
 	if err := flagset.Parse(args); err != nil {
 		fmt.Fprintf(stderr, "Invalid args")
@@ -114,15 +116,26 @@ func Latest(ctx context.Context, stdin io.Reader, stdout io.Writer, stderr io.Wr
 		fmt.Fprintf(stderr, "Error\n%s", err.Error())
 		return 1
 	}
-	if *duration {
-		fmt.Println(result.Duration())
-	} else if *timestamp {
-		fmt.Println(result.Start.Format(time.RFC3339))
-	} else if *printTopic {
-		fmt.Println(result.Data)
-	} else {
-		fmt.Fprintln(stdout, result)
+
+	printAll := !(*printTimestamp || *printDuration || *printTopic)
+
+	var sb strings.Builder
+	if *printTimestamp || printAll {
+		sb.WriteString(result.Start.Format(time.RFC3339))
 	}
+	if *printDuration || printAll {
+		if sb.Len() != 0 {
+			sb.WriteRune(',')
+		}
+		sb.WriteString(result.Duration().Truncate(*truncate).String())
+	}
+	if *printTopic || printAll {
+		if sb.Len() != 0 {
+			sb.WriteRune(',')
+		}
+		sb.WriteString(result.Data)
+	}
+	fmt.Println(sb.String())
 	return 0
 }
 
