@@ -1,5 +1,7 @@
 package main
 
-const GitCommit = ""
-const Version = ""
-const GoVersion = ""
+var GitCommit string
+var GitDescribe string
+var GitTag string
+var GoVersion string
+var CommitsSinceTag string

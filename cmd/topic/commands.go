@@ -21,10 +21,10 @@ func (c *CommandSet) Add(cmds ...Command) {
 	c.Commands = append(c.Commands, cmds...)
 }
 
-func (c CommandSet) GetCommandFunc(args []string) CommandFunc {
+func (c CommandSet) GetCommandFunc(name string) CommandFunc {
 	// TODO: use a better data structure
 	for _, cmd := range c.Commands {
-		if cmd.Name == args[1] {
+		if cmd.Name == name {
 			return cmd.Command
 		}
 	}
@@ -34,6 +34,6 @@ func (c CommandSet) GetCommandFunc(args []string) CommandFunc {
 func (c CommandSet) Usage(w io.Writer) {
 	fmt.Fprintln(w, "Available Commands:")
 	for _, cmd := range c.Commands {
-		fmt.Fprintf(w, "\t%s\n\t\t%s", cmd.Name, cmd.Description)
+		fmt.Fprintf(w, "\t%s\n\t\t%s\n", cmd.Name, cmd.Description)
 	}
 }
