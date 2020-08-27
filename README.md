@@ -1,6 +1,6 @@
 # Topic - Simple Time Management
 
-A simple command line tool to keep track of time. Topic uses simple timestamps and free form text. Allowing you to manage tasks with minimal intrusion while you work without worrying about project/
+A simple command line tool to keep track of time. Topic uses simple timestamps and free form text. Allowing you to manage tasks with minimal intrusion while you work.
 
 Set the topic by executing `topic new [task]`. For example:
 ```
