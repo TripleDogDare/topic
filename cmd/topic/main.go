@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -141,9 +142,13 @@ func Latest(ctx context.Context, stdin io.Reader, stdout io.Writer, stderr io.Wr
 
 func Version(ctx context.Context, stdin io.Reader, stdout io.Writer, stderr io.Writer, args []string) int {
 	fmt.Fprintf(stdout, "Commit: %s\n", GitCommit)
-	fmt.Fprintf(stdout, "GitDescribe%s\n", GitDescribe)
-	fmt.Fprintf(stdout, "GitTag%s\n", GitTag)
-	fmt.Fprintf(stdout, "GoVersion%s\n", GoVersion)
-	fmt.Fprintf(stdout, "CommitsSinceTag%s\n", CommitsSinceTag)
+	fmt.Fprintf(stdout, "GitDescribe: %s\n", GitDescribe)
+	fmt.Fprintf(stdout, "GitTag: %s\n", GitTag)
+	goVersion := GoVersion
+	if strings.TrimSpace(goVersion) == "" {
+		goVersion = runtime.Version()
+	}
+	fmt.Fprintf(stdout, "GoVersion: %s\n", goVersion)
+	fmt.Fprintf(stdout, "CommitsSinceTag: %s\n", CommitsSinceTag)
 	return 0
 }
