@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// LastLine returns the last line of the stream.
 func LastLine(ctx context.Context, r io.Reader) string {
 	scanner := bufio.NewScanner(r)
 	scanner.Split(bufio.ScanLines)

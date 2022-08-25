@@ -51,17 +51,6 @@ func BuildInfo(ctx context.Context, stdin io.Reader, stdout io.Writer, stderr io
 		fmt.Fprintf(stdout, "Build path: %s\n", info.Path)
 		fmt.Fprintf(stdout, "Build Module: %s\n", info.Main.Path)
 		fmt.Fprintf(stdout, "Build version: %s\n", info.Main.Version)
-		fmt.Fprintf(stdout, "Build sum: %s\n", info.Main.Sum)
-		var printModule func(prefix string, m *debug.Module)
-		printModule = func(prefix string, m *debug.Module) {
-			fmt.Fprintf(stdout, "%s%s, %s, %s\n", prefix, m.Path, m.Version, m.Sum)
-			if m.Replace != nil {
-				printModule("-> ", m.Replace)
-			}
-		}
-		for _, module := range info.Deps {
-			printModule("", module)
-		}
 	}
 	return 0
 }

@@ -49,3 +49,13 @@ func TestReport(t *testing.T) {
 	}
 	t.Log(w.String())
 }
+
+func BenchmarkReport(t *testing.B) {
+	ctx := context.Background()
+	w := new(strings.Builder)
+	r := strings.NewReader(TestData)
+	t.ResetTimer()
+	if err := generateReport(ctx, r, w); err != nil {
+		t.Error(err)
+	}
+}
