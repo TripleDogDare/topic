@@ -61,3 +61,18 @@ func (t *Topic) Empty() bool {
 func (t *Topic) String() string {
 	return fmt.Sprintf("%s,%s,%s", t.Start.Format(time.RFC3339), t.Duration(), t.Data)
 }
+
+func (t *Topic) CsvWrite(w RowWriter) error {
+	return w.Write([]string{
+		t.Start.Format("2006-01-02"),
+		t.Start.Format("15:04:05"),
+		t.Start.Format("-0700"),
+		fmt.Sprintf("%.02f", t.Duration().Hours()),
+		t.Duration().Round(time.Second).String(),
+		t.Data,
+	})
+}
+
+type RowWriter interface {
+	Write([]string) error
+}

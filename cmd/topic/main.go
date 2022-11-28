@@ -29,6 +29,7 @@ func Main(ctx context.Context, stdin io.Reader, stdout, stderr io.Writer, args [
 	commands.Add(
 		Command{"report", Report, "print report"},
 		Command{"prompt", Prompt, "prompt user to set a topic"},
+		Command{"day", Day, "print report for the day"},
 		Command{"latest", Latest, "report most recent topic"},
 		Command{"new", NewTopic, "sets a new topic"},
 		Command{"version", Version, "print version info"},
@@ -51,6 +52,15 @@ func BuildInfo(ctx context.Context, stdin io.Reader, stdout io.Writer, stderr io
 		fmt.Fprintf(stdout, "Build path: %s\n", info.Path)
 		fmt.Fprintf(stdout, "Build Module: %s\n", info.Main.Path)
 		fmt.Fprintf(stdout, "Build version: %s\n", info.Main.Version)
+	}
+	return 0
+}
+
+func Day(ctx context.Context, stdin io.Reader, stdout io.Writer, stderr io.Writer, args []string) int {
+	fmt.Fprintln(stderr, "running report")
+	if err := topic.DayReport(ctx, stdout, time.Now()); err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
 	}
 	return 0
 }

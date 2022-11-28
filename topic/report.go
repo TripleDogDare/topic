@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/csv"
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -43,8 +44,11 @@ func WriteTopics(ctx context.Context, w io.Writer, ch <-chan Topic, done func())
 				continue
 			}
 			err := csvWriter.Write([]string{
-				topic.Start.Format(time.RFC3339),
-				topic.Duration().Round(time.Second).String(),
+				topic.Start.Format("2006-01-02"),
+				topic.Start.Format("15:04:05"),
+				topic.Start.Format("-0700"),
+				fmt.Sprintf("%.02f", topic.Duration().Round(time.Second).Hours()),
+				fmt.Sprintf(topic.Duration().Round(time.Second).String()),
 				topic.Data,
 			})
 
@@ -68,6 +72,7 @@ func generateReport(ctx context.Context, r io.Reader, w io.Writer) error {
 	emit := make(chan Topic, 10)
 	// Print data
 	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 	go WriteTopics(ctx, w, emit, cancel)
 
 	var line string
